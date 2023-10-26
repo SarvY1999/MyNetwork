@@ -2,6 +2,9 @@ const User = require('../models/User');
 const CustomError = require('../customError/customError');
 const { StatusCodes } = require('http-status-codes');
 const comparePassword = require('../utils/comparePassword');
+const genToken = require('../utils/genToken');
+const jwt = require('jsonwebtoken');
+
 
 const register = async (req, res) => {
     const { username, email, password } = req.body;
@@ -9,7 +12,7 @@ const register = async (req, res) => {
     if (!username || !email || !password) {
         throw new CustomError('Please provide all the details', StatusCodes.BAD_REQUEST);
     };
-
+    // Bug: What if user enters an username which already exists.
     const ifExist = await User.findOne({ email: email });
 
     if (ifExist) {
@@ -38,10 +41,27 @@ const login = async (req, res) => {
 
     // verify password
     await comparePassword(password, user.password);
-    res.status(StatusCodes.OK).json({ msg: `Welcome User ${user.username}` });
-}
+
+    const userObj = {
+        email : user.email,
+        username : user.username,
+        userId: user._id,
+        role: user.role
+    }
+
+    // generating Token and cookie
+    const token = genToken(res, userObj);
+    // console.log('Unsigned: ', req.cookies);
+    // console.log('signed', req.signedCookies);
+    res.status(StatusCodes.OK).json({ msg: `Welcome User ${user.username}`});
+};
+
 const logout = (req, res) => {
-    res.send('logout User');
+    res.cookie('token', '', {
+        httpOnly: true,
+        expires: new Date(Date.now())
+    })
+    res.status(StatusCodes.OK).json({msg: 'Logged out successfully..!'});
 }
 
 module.exports = {
