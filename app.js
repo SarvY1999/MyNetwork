@@ -2,6 +2,7 @@
 const express = require('express');
 require('dotenv').config();
 require('express-async-errors')
+const cookieParser = require('cookie-parser');
 const app = express();
 
 // function imports
@@ -11,6 +12,7 @@ const errorHandler = require('./middleware/errorHandler');
 
 
 app.use(express.json());
+app.use(cookieParser('secret-key'));
 app.use('/api/v1/users', userRoutes);
 app.use(errorHandler)
 
