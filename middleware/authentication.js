@@ -16,7 +16,7 @@ const authentication = (req, res, next) => {
     next();
 
     }catch(error){
-        throw new CustomError('Authentication Invalid');
+        throw new CustomError('Authentication Invalid', StatusCodes.FORBIDDEN);
     }
 }
 
