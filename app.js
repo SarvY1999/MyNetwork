@@ -12,7 +12,7 @@ const errorHandler = require('./middleware/errorHandler');
 
 
 app.use(express.json());
-app.use(cookieParser('secret-key'));
+app.use(cookieParser(process.env.JWT_SECRET));
 app.use('/api/v1/users', userRoutes);
 app.use(errorHandler)
 
