@@ -7,7 +7,7 @@ const authentication = (req, res, next) => {
     const token = req.signedCookies.token;
 
     if(!token){
-        throw new CustomError('Please login', StatusCodes.BAD_REQUEST);
+        throw new CustomError('Please Login or Signup', StatusCodes.BAD_REQUEST);
     }
 
     try{
