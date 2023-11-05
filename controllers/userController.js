@@ -64,6 +64,10 @@ const logout = (req, res) => {
     res.status(StatusCodes.OK).json({msg: 'Logged out successfully..!'});
 }
 
+const showMe = (req, res) => {
+    res.status(StatusCodes.OK).json({user: req.user.username}); 
+}
+
 module.exports = {
-    register, login, logout
+    register, login, logout, showMe
 }
