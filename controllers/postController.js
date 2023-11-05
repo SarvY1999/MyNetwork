@@ -19,7 +19,7 @@ const createPost = async(req, res) => {
 const getsinglePost = async(req, res) => {
     const postId = req.params.id; 
 
-    const post = await Post.findOne({_id: postId}).populate({path: 'user', select: "username"});
+    const post = await Post.findOne({_id: postId}).populate({path: 'user', select: "username"}).populate('likes');
 
     if(!post){
         throw new CustomError(`No post found with id: ${postId}`);
@@ -30,7 +30,7 @@ const getsinglePost = async(req, res) => {
 
 const getAllPost = async(req, res) => {
 
-    const allPosts = await Post.find({}).populate({path: 'user', select: "username"});
+    const allPosts = await Post.find({}).populate({path: 'user', select: "username"}).populate('likes');
 
     res.status(StatusCodes.OK).json({allPosts, posts: allPosts.length});
 };
