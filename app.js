@@ -9,6 +9,7 @@ const app = express();
 const connectDb = require('./Db/connectDb');
 const userRoutes = require('./routes/userRoutes');
 const postRoutes = require('./routes/postRoutes');
+const likeRoutes = require('./routes/likeRoutes');
 const errorHandler = require('./middleware/errorHandler');
 
 
@@ -16,6 +17,7 @@ app.use(express.json());
 app.use(cookieParser(process.env.JWT_SECRET));
 app.use('/api/v1/users', userRoutes);
 app.use('/api/v1/posts', postRoutes);
+app.use('/api/v1/likes', likeRoutes);
 app.use(errorHandler)
 
 app.get('/api/v1/', (req, res) => {
