@@ -15,4 +15,14 @@ const PostSchema = new mongoose.Schema({
     }
 });
 
+PostSchema.set('toJSON', {virtuals: true});
+PostSchema.set('toObject', {virtuals: true});
+
+PostSchema.virtual('likes', {
+    ref: 'Like',
+    localField: '_id',
+    foreignField: 'post',
+    count: true
+})
+
 module.exports = mongoose.model('Post', PostSchema);
