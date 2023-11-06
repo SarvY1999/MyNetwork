@@ -30,7 +30,7 @@ const getsinglePost = async(req, res) => {
 
 const getAllPost = async(req, res) => {
 
-    const allPosts = await Post.find({}).populate({path: 'user', select: "username"}).populate('likes');
+    const allPosts = await Post.find({}).populate({path: 'user', select: "username"}).populate(['likes', 'comments']);
 
     res.status(StatusCodes.OK).json({allPosts, posts: allPosts.length});
 };
