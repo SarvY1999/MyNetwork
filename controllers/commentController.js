@@ -43,9 +43,20 @@ const editComment = async (req, res) => {
     res.status(StatusCodes.CREATED).json({msg: "Comment edited successfully"});
 };
 
-// const showCommentsByPost = async(req, res) => {
-    
-// }
+const showCommentsByPost = async(req, res) => {
+    const postId = req.params.id; 
+
+    const post = await Post.findOne({_id: postId});
+
+    if(!post){
+        throw new CustomError("Post does not Exist", StatusCodes.NOT_FOUND);
+    }
+
+    const comments = await Comment.find({post: postId}).populate({path: 'user', select: "username"});
+
+    // if the post has no comment we will return no comment response and of if it has comments it will return comments.
+    comments==0 ? res.status(StatusCodes.OK).json({msg: "No comments"}) : res.status(StatusCodes.OK).json({comments: comments}); 
+};
 
 const deleteComment = async (req, res) => {
     const commentId = req.params.id;
@@ -63,5 +74,5 @@ const deleteComment = async (req, res) => {
 
 
 module.exports = {
-    createComment, editComment, deleteComment
+    createComment, editComment, deleteComment, showCommentsByPost
 };
