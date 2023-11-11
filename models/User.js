@@ -1,5 +1,6 @@
 const mongoose = require('mongoose');
 const bcrypt = require('bcrypt');
+const Follow = require('../models/Follow');
 
 const Userschema = new mongoose.Schema({
     username: {
@@ -24,6 +25,25 @@ const Userschema = new mongoose.Schema({
         default: 'user'
     }
 });
+
+Userschema.set('toJSON', {virtuals: true});
+Userschema.set('toObject', {virtuals: true});
+
+// for followers
+Userschema.virtual('followers', {
+    ref: 'Follow',
+    localField: "_id",
+    foreignField: "following",
+    count: true
+}); 
+
+// for following
+Userschema.virtual('following', {
+    ref: 'Follow',
+    localField: "_id",
+    foreignField: "follower",
+    count: true
+})
 
 Userschema.pre('save', async function () {
     const salt = await bcrypt.genSalt(10);
