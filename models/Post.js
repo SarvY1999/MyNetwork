@@ -1,4 +1,6 @@
 const mongoose = require('mongoose');
+const Like = require('./Like');
+const Comment = require('./Comment');
 
 const PostSchema = new mongoose.Schema({
     user: {
@@ -31,5 +33,10 @@ PostSchema.virtual('comments', {
     foreignField: "post",
     count: true
 });
+
+PostSchema.pre('deleteOne', {document: true},  async function(){
+    await Like.deleteMany({post: this._id});
+    await Comment.deleteMany({post: this._id});
+})
 
 module.exports = mongoose.model('Post', PostSchema);
