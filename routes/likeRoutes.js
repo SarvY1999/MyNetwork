@@ -4,6 +4,6 @@ const {likePost, showLikesOnPosts} = require('../controllers/likeController');
 const authentication = require('../middleware/authentication');
 
 router.route('/:id').post(authentication, likePost);
-router.route('/showlikes/:id').post(authentication, showLikesOnPosts);
+router.route('/showlikes/:id').get(authentication, showLikesOnPosts);
 
 module.exports = router;
