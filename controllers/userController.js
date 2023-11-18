@@ -56,12 +56,12 @@ const login = async (req, res) => {
     res.status(StatusCodes.OK).json({ msg: `Welcome User ${user.username}`});
 };
 
-const logout = (req, res) => {
+const logout = ({req, res, msg}) => {
     res.cookie('token', '', {
         httpOnly: true,
         expires: new Date(Date.now())
     })
-    res.status(StatusCodes.OK).json({msg: 'Logged out successfully..!'});
+    res.status(StatusCodes.OK).json({msg: msg || 'Logged out successfully..!'});
 }
 
 const showMe = (req, res) => {

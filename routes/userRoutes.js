@@ -4,7 +4,7 @@ const {
     register, login, logout, showMe
 } = require('../controllers/userController');
 
-const {viewMyProfile, viewOthersProfile} = require('../controllers/userProfileController')
+const {viewMyProfile, viewOthersProfile, updatePassword} = require('../controllers/userProfileController')
 const authentication = require('../middleware/authentication');
 
 
@@ -14,5 +14,6 @@ router.route('/logout').get(logout);
 router.route('/showMe').get(authentication, showMe);
 router.route('/profile').get(authentication, viewMyProfile);
 router.route('/profile/:id').get(authentication, viewOthersProfile);
+router.route('/updatePassword').patch(authentication, updatePassword);
 
 module.exports = router;
