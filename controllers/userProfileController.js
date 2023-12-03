@@ -3,6 +3,8 @@ const {StatusCodes} = require('http-status-codes');
 const CustomError = require('../customError/customError');
 const comparePassword = require('../utils/comparePassword');
 const {logout} = require('../controllers/userController');
+const path = require('path');
+const checkPermission = require('../utils/checkPermission');
 
 const viewMyProfile = async (req, res) => {
     const userProfile = await User.findOne({_id: req.user.userId}).populate('followers').populate('following').select('-password');
@@ -38,4 +40,34 @@ const updatePassword = async (req, res) => {
 
     logout({req, res, msg: 'Password Successfully Updated, Please login again'});
 }
-module.exports = {viewMyProfile, viewOthersProfile, updatePassword};
+
+const uploadProfile = async (req, res) => {
+    if(!req.files){
+        throw new CustomError('Please select an image as a profile picture', StatusCodes.BAD_REQUEST);
+    }
+    const profilepic = req.files.image;
+
+    if(!profilepic.mimetype.startsWith('image')){
+        throw new CustomError('Please select an image as a profile picture', StatusCodes.BAD_REQUEST);
+    }
+    const maxsize = 1024 *1024;
+
+    if(profilepic.size > maxsize){
+        throw new CustomError('Image is too big, please select an image smaller than 1MB ', StatusCodes.BAD_REQUEST);
+    }
+
+    //Get the user 
+    const user = await User.findOne({_id: req.user.userId});
+    
+    //check if the user can update only it's own profile and not other users
+    checkPermission(req.user, user._id);
+
+    const imagePath = path.join(__dirname, '../public/profile/'+ profilepic.name);
+    await profilepic.mv(imagePath)
+
+    user.profilePicture = imagePath
+    await user.save();
+
+    res.status(StatusCodes.OK).json({msg: 'Profile Picture successfully uploaded'});
+}
+module.exports = {viewMyProfile, viewOthersProfile, updatePassword, uploadProfile};
