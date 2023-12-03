@@ -13,10 +13,13 @@ const likeRoutes = require('./routes/likeRoutes');
 const commentRoutes = require('./routes/commentRoutes');
 const followRoutes = require('./routes/followRoutes');
 const errorHandler = require('./middleware/errorHandler');
+const fileUpload = require('express-fileupload');
 
 
 app.use(express.json());
 app.use(cookieParser(process.env.JWT_SECRET));
+app.use(express.static('./public'));
+app.use(fileUpload());
 app.use('/api/v1/users', userRoutes);
 app.use('/api/v1/posts', postRoutes);
 app.use('/api/v1/likes', likeRoutes);
