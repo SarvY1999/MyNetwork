@@ -9,7 +9,10 @@ const PostSchema = new mongoose.Schema({
     },
     content: {
         type: String,
-        required: true
+        // required: true
+    },
+    image: {
+        type: String
     },
     timestamp: {
         type: Date,
@@ -17,8 +20,8 @@ const PostSchema = new mongoose.Schema({
     }
 });
 
-PostSchema.set('toJSON', {virtuals: true});
-PostSchema.set('toObject', {virtuals: true});
+PostSchema.set('toJSON', { virtuals: true });
+PostSchema.set('toObject', { virtuals: true });
 
 PostSchema.virtual('likes', {
     ref: 'Like',
@@ -34,9 +37,9 @@ PostSchema.virtual('comments', {
     count: true
 });
 
-PostSchema.pre('deleteOne', {document: true},  async function(){
-    await Like.deleteMany({post: this._id});
-    await Comment.deleteMany({post: this._id});
+PostSchema.pre('deleteOne', { document: true }, async function () {
+    await Like.deleteMany({ post: this._id });
+    await Comment.deleteMany({ post: this._id });
 })
 
 module.exports = mongoose.model('Post', PostSchema);
