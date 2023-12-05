@@ -7,17 +7,17 @@ const checkAndMovePostImage = require('../utils/checkAndMovePostImg');
 
 // Work on createPost
 const createPost = async (req, res) => {
-    const post = req.body.content;
+    const post = req.body;
 
-    if (!post && !req.files) {
+    if (Object.keys(post).length === 0 && !req.files) {
         throw new CustomError('Empty posts are not allowed', StatusCodes.BAD_REQUEST);
     }
 
+    //check if image is provided 
     if (req.files) {
         post.image = await checkAndMovePostImage(req.files.image); // here we are assigning the path returned by the checkAndMovePostimage func.
     }
     post.user = req.user.userId // attaching user to it's created post
-
     const createdPost = await Post.create(post);
 
     res.status(StatusCodes.CREATED).json({ msg: "Post successfully created", post: await createdPost.populate({ path: 'user', select: "username" }) });
