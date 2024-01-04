@@ -1,6 +1,7 @@
 const mongoose = require('mongoose');
 const Like = require('./Like');
 const Comment = require('./Comment');
+const fs = require('fs/promises');
 
 const PostSchema = new mongoose.Schema({
     user: {
@@ -38,6 +39,10 @@ PostSchema.virtual('comments', {
 });
 
 PostSchema.pre('deleteOne', { document: true }, async function () {
+    //checking for image and delete if post is deleted
+    if(this.image){
+        await fs.unlink(this.image);
+    }
     await Like.deleteMany({ post: this._id });
     await Comment.deleteMany({ post: this._id });
 })
