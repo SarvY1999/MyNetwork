@@ -5,7 +5,6 @@ const checkPermission = require('../utils/checkPermission');
 const checkAndMovePostImage = require('../utils/checkAndMovePostImg');
 
 
-// Work on createPost
 const createPost = async (req, res) => {
     const post = req.body;
 
