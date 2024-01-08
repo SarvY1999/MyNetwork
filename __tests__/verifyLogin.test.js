@@ -1,6 +1,6 @@
 const axios = require('axios');
+require('dotenv').config();
 
-const url = `http://localhost:5000/api/v1`
 // Positive Test
 test('POST / Test login if correct credentials are provided', async () => {
     try {
@@ -9,7 +9,7 @@ test('POST / Test login if correct credentials are provided', async () => {
             email: "test@mail.com",
             password: "secret"
         }
-        const response = await axios.post(`${url}/users/login`, userData)
+        const response = await axios.post(`${process.env.URL}/api/v1/users/login`, userData)
         console.log(response.data);
         expect(response.status).toBe(200)
         expect(response.data.msg).toBe("Welcome User test");
@@ -27,7 +27,7 @@ test('POST / Test login if wrong credentials are provided', async () => {
             "email": "user1@gmail.com",
             "password": "test123"
         }
-        const response = await axios.post(`${url}/users/login`, userData)
+        const response = await axios.post(`${process.env.URL}/api/v1/users/login`, userData)
         console.log(response.data);
         expect(response.status).toBe(400)
         expect(response.data.msg).toBe("No user found with email user1@gmail.com, Please register");
